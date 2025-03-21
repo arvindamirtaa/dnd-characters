@@ -1,26 +1,216 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fondamento:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Base styles */
+@layer base {
+  body {
+    @apply text-dnd-light bg-dnd-dark min-h-screen;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      theme('colors.dnd-dark')
+    )
+    theme('colors.dnd-dark-dark');
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medieval text-dnd-light;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Component styles */
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply bg-dnd-primary text-white py-2 px-6 rounded-md hover:bg-opacity-90 transition-all
+           shadow-md font-medieval tracking-wide border-2 border-dnd-secondary;
+  }
+  
+  .btn-secondary {
+    @apply bg-dnd-secondary text-dnd-dark py-2 px-6 rounded-md hover:bg-opacity-90 transition-all
+           shadow-md font-medieval tracking-wide border-2 border-dnd-primary;
+  }
+  
+  .btn-icon {
+    @apply inline-flex items-center justify-center w-10 h-10 rounded-md
+           bg-dnd-dark/30 text-dnd-light border border-dnd-secondary
+           hover:bg-dnd-secondary/20 hover:text-dnd-secondary transition-all cursor-pointer;
+  }
+  
+  /* Cards and containers */
+  .card {
+    @apply bg-dnd-dark/80 border-2 border-dnd-secondary rounded-lg p-6 shadow-lg;
+  }
+  
+  .wizard-container {
+    @apply max-w-4xl mx-auto p-6 bg-dnd-dark/90 rounded-xl shadow-lg border-2 border-dnd-secondary;
+  }
+  
+  /* Form elements */
+  .input-field {
+    @apply bg-dnd-dark/60 border-2 border-dnd-secondary rounded-md px-4 py-2 text-dnd-light
+           focus:ring-2 focus:ring-dnd-primary focus:border-dnd-primary focus:outline-none
+           placeholder:text-dnd-light/40;
+  }
+  
+  .select-field {
+    @apply bg-dnd-dark/60 border-2 border-dnd-secondary rounded-md px-4 py-2 text-dnd-light
+           focus:ring-2 focus:ring-dnd-primary focus:border-dnd-primary focus:outline-none;
+  }
+  
+  .form-group {
+    @apply mb-4;
+  }
+  
+  /* Typography */
+  .heading-fancy {
+    @apply font-medieval text-dnd-secondary tracking-wider;
+    position: relative;
+  }
+  
+  .heading-fancy::after {
+    content: '';
+    display: block;
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, theme('colors.dnd-secondary'), transparent);
+    margin: 0.5rem auto 0;
+    opacity: 0.7;
+  }
+  
+  /* Backgrounds */
+  .parchment {
+    @apply bg-dnd-light text-dnd-dark p-6 rounded-md shadow-lg;
+  }
+  
+  /* Loading animation */
+  .loading-dice {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  
+  .loading-dice div {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    @apply bg-dnd-secondary;
+    animation: loading-dice 1.2s linear infinite;
+  }
+  
+  .loading-dice div:nth-child(1) {
+    top: 8px;
+    left: 8px;
+    animation-delay: 0s;
+  }
+  
+  .loading-dice div:nth-child(2) {
+    top: 8px;
+    left: 32px;
+    animation-delay: -0.4s;
+  }
+  
+  .loading-dice div:nth-child(3) {
+    top: 8px;
+    left: 56px;
+    animation-delay: -0.8s;
+  }
+  
+  .loading-dice div:nth-child(4) {
+    top: 32px;
+    left: 8px;
+    animation-delay: -0.4s;
+  }
+  
+  .loading-dice div:nth-child(5) {
+    top: 32px;
+    left: 32px;
+    animation-delay: -0.8s;
+  }
+  
+  .loading-dice div:nth-child(6) {
+    top: 32px;
+    left: 56px;
+    animation-delay: -1.2s;
+  }
+  
+  .loading-dice div:nth-child(7) {
+    top: 56px;
+    left: 8px;
+    animation-delay: -0.8s;
+  }
+  
+  .loading-dice div:nth-child(8) {
+    top: 56px;
+    left: 32px;
+    animation-delay: -1.2s;
+  }
+  
+  .loading-dice div:nth-child(9) {
+    top: 56px;
+    left: 56px;
+    animation-delay: -1.6s;
+  }
+  
+  @keyframes loading-dice {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  
+  /* Animations */
+  .fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .slide-in-right {
+    animation: slideInRight 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideInRight {
+    from {
+      transform: translateX(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Character sheet styles */
+  .ability-score-box {
+    @apply flex flex-col items-center bg-dnd-dark/30 border border-dnd-secondary rounded-md p-3;
+  }
+  
+  .ability-score-box .ability-name {
+    @apply font-medieval uppercase text-dnd-secondary text-sm;
+  }
+  
+  .ability-score-box .ability-value {
+    @apply font-medieval text-2xl text-white;
+  }
+  
+  .ability-score-box .ability-modifier {
+    @apply text-sm text-dnd-light;
+  }
 }
