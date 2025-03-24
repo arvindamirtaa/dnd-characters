@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faArrowLeft, faRandom, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -78,8 +78,18 @@ export default function CharacterWizard() {
   const updateCharacter = (updates: Partial<Character>) => {
     setCharacter(prev => ({ ...prev, ...updates }));
   };
+// Define a type for the character generation prompt
+type CharacterGenerationPrompt = {
+  name?: string;
+  race?: string;
+  class?: string;
+  level?: number;
+  background?: string;
+  alignment?: string;
+};
 
-  // Function to generate a character using AI
+// Function to generate a character using AI
+const generateCharacter = async (prompt: CharacterGenerationPrompt = {}) => {
   const generateCharacter = async (prompt: any = {}) => {
     setIsGenerating(true);
     setError(null);
@@ -120,9 +130,9 @@ export default function CharacterWizard() {
       
       // Move to the review step
       setCurrentStep(WizardStep.Review);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error generating character:', err);
-      setError(err.message || 'Failed to generate character. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to generate character. Please try again.');
     } finally {
       setIsGenerating(false);
     }
@@ -160,9 +170,9 @@ export default function CharacterWizard() {
         ...prevChar,
         backstory: data.backstory
       }));
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error generating backstory:', err);
-      setError(err.message || 'Failed to generate backstory. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to generate backstory. Please try again.');
     } finally {
       setIsGenerating(false);
     }

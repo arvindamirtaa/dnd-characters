@@ -34,10 +34,9 @@ type AbilityScoresSelectorProps = {
   characterClass: CharacterClass;
 };
 
-export default function AbilityScoresSelector({ 
-  abilityScores, 
-  onUpdateScores, 
-  race, 
+export default function AbilityScoresSelector({
+  abilityScores,
+  onUpdateScores,
   characterClass
 }: AbilityScoresSelectorProps) {
   const [scores, setScores] = useState<AbilityScores>(abilityScores);
@@ -161,7 +160,7 @@ export default function AbilityScoresSelector({
       
       <div className="bg-dnd-dark/60 rounded-lg p-4 border-2 border-dnd-secondary/50 mb-6">
         <p className="text-dnd-light/90 mb-4">
-          Your ability scores define your character's physical and mental attributes. For your {characterClass},
+          Your ability scores define your character&apos;s physical and mental attributes. For your {characterClass},
           we recommend prioritizing <span className="text-dnd-secondary font-bold">{getRecommendedAbilities()}</span>.
         </p>
         

@@ -19,7 +19,8 @@ const RACE_DESCRIPTIONS = {
   'Dragonborn': `Born of dragons, as their name proclaims, the dragonborn walk proudly through a world that greets them with fearful incomprehension. Shaped by draconic gods or the dragons themselves, dragonborn originally hatched from dragon eggs.`
 };
 
-// Race images (placeholder URLs - you'll need to replace these with actual images)
+// Race images (placeholder URLs - commented out as not currently used)
+/*
 const RACE_IMAGES = {
   'Human': '/images/races/human.jpg',
   'Elf': '/images/races/elf.jpg',
@@ -31,6 +32,7 @@ const RACE_IMAGES = {
   'Tiefling': '/images/races/tiefling.jpg',
   'Dragonborn': '/images/races/dragonborn.jpg'
 };
+*/
 
 // Race traits
 const RACE_TRAITS = {
@@ -113,7 +115,7 @@ export default function RaceSelector({ selectedRace, onSelectRace }: RaceSelecto
       </div>
       
       <div className="text-center text-dnd-light/70 italic">
-        <p>Your race determines your character's fundamental qualities, including base traits and natural aptitudes.</p>
+        <p>Your race determines your character&apos;s fundamental qualities, including base traits and natural aptitudes.</p>
       </div>
     </div>
   );

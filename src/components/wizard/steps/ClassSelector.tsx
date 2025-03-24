@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CharacterClass } from '@/types/character';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faUserShield, faSkull, faHatWizard, faPrayingHands, faDrumstickBite, faLeaf, faFistRaised, faHammer, faBullseye, faGem, faWandSparkles, faBook, faScroll } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faUserShield, faSkull, faHatWizard, faPrayingHands, faDrumstickBite, faLeaf, faFistRaised, faHammer, faBullseye, faGem, faWandSparkles, faScroll } from '@fortawesome/free-solid-svg-icons';
 
 // Class descriptions
 const CLASS_DESCRIPTIONS = {
@@ -157,7 +157,7 @@ export default function ClassSelector({ selectedClass, onSelectClass }: ClassSel
       </div>
       
       <div className="text-center text-dnd-light/70 italic">
-        <p>Your class shapes your character's capabilities, determining how you approach combat, problem-solving, and social interactions.</p>
+        <p>Your class shapes your character&apos;s capabilities, determining how you approach combat, problem-solving, and social interactions.</p>
       </div>
     </div>
   );

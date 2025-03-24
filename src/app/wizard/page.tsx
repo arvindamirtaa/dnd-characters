@@ -1,11 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import CharacterWizard from '@/components/wizard/CharacterWizard';
 
 export default function WizardPage() {
-  const router = useRouter();
   const [apiKeySet, setApiKeySet] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -44,14 +42,14 @@ export default function WizardPage() {
             <code>OPENAI_API_KEY=your_api_key_here</code>
           </div>
           <p className="text-xs sm:text-sm">
-            Don't have an API key? You can get one from{' '}
+            Don&apos;t have an API key? You can get one from{' '}
             <a
               href="https://platform.openai.com/api-keys"
               target="_blank"
               rel="noopener noreferrer"
               className="text-dnd-secondary underline"
             >
-              OpenAI's platform
+              OpenAI&apos;s platform
             </a>
             .
           </p>

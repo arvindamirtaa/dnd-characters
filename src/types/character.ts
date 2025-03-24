@@ -96,6 +96,7 @@ export interface Spell {
 // Main character interface
 export interface Character {
   // Basic info
+  id?: string;
   name: string;
   race: CharacterRace;
   class: CharacterClass;
@@ -117,9 +118,13 @@ export interface Character {
   
   // Combat stats
   armorClass?: number;
-  hitPoints?: number;
+  hitPoints?: {
+    maximum: number;
+    current: number;
+  } | number;
   hitDice?: number;
   speed?: number;
+  initiative?: number;
   
   // Character details
   personalityTraits?: string;
@@ -127,6 +132,7 @@ export interface Character {
   bonds?: string;
   flaws?: string;
   backstory?: string;
+  appearance?: string;
   
   // Equipment and features
   equipment?: Equipment[];
@@ -134,7 +140,9 @@ export interface Character {
   proficiencies?: string[];
   languages?: string[];
   spells?: Spell[];
+  skills?: string[];
   
   // Misc
   experiencePoints?: number;
+  experience?: number; // Alias for experiencePoints for backward compatibility
 } 

@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Character } from '@/types/character';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload, faPrint } from '@fortawesome/free-solid-svg-icons';
 import CharacterSheetPDF from '@/components/character-sheet/CharacterSheetPDF';
 
 // Format ability score modifiers
@@ -19,9 +17,10 @@ const formatModifier = (modifier: number): string => {
 
 type CharacterReviewProps = {
   character: Character;
+  onUpdateCharacter?: (updates: Partial<Character>) => void;
 };
 
-export default function CharacterReview({ character }: CharacterReviewProps) {
+export default function CharacterReview({ character, onUpdateCharacter }: CharacterReviewProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'details' | 'traits' | 'spells'>('overview');
   
   const { abilityScores } = character;

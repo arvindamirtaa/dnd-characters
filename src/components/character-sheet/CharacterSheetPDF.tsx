@@ -1,6 +1,5 @@
 'use client';
 
-import { useRef } from 'react';
 import jsPDF from 'jspdf';
 import { Character } from '@/types/character';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

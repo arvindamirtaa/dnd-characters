@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CharacterAlignment } from '@/types/character';
+import { CharacterAlignment, CharacterBackground } from '@/types/character';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
@@ -76,9 +76,9 @@ const ALIGNMENTS = {
 };
 
 type BackgroundSelectorProps = {
-  background: string;
+  background: CharacterBackground | string;
   alignment: CharacterAlignment;
-  onUpdateBackground: (background: string) => void;
+  onUpdateBackground: (background: CharacterBackground) => void;
   onUpdateAlignment: (alignment: CharacterAlignment) => void;
 };
 
@@ -94,7 +94,7 @@ export default function BackgroundSelector({
   // Handle background selection
   const handleBackgroundSelect = (bgId: string) => {
     setSelectedBackground(bgId);
-    onUpdateBackground(bgId);
+    onUpdateBackground(bgId as CharacterBackground);
   };
   
   // Handle alignment selection
@@ -206,7 +206,7 @@ export default function BackgroundSelector({
       </div>
       
       <div className="text-center text-dnd-light/70 italic mt-6">
-        <p>Your background and alignment help define your character's motivations, ethics, and place in the world.</p>
+        <p>Your background and alignment help define your character&apos;s motivations, ethics, and place in the world.</p>
       </div>
     </div>
   );

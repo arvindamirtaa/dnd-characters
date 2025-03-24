@@ -1,46 +1,10 @@
 import OpenAI from 'openai';
-import { AbilityScores, Character, CharacterAlignment, CharacterClass, CharacterRace } from '@/types/character';
+import { AbilityScores, Character, CharacterAlignment, CharacterClass, CharacterRace, CharacterBackground } from '@/types/character';
 
-export class OpenAIApi {
-  private client: OpenAI;
-
-  constructor() {
-    this.client = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-  }
-
-  async createCompletion(options: {
-    model: string;
-    temperature?: number;
-    max_tokens?: number;
-    messages: { role: 'system' | 'user' | 'assistant'; content: string }[];
-    response_format?: { type: 'json_object' };
-  }) {
-    try {
-      const response = await this.client.chat.completions.create({
-        model: options.model || 'gpt-4',
-        temperature: options.temperature || 0.7,
-        max_tokens: options.max_tokens || 1000,
-        messages: options.messages,
-        response_format: options.response_format,
-      });
-
-      return {
-        choices: [
-          {
-            message: {
-              content: response.choices[0]?.message.content || '',
-            },
-          },
-        ],
-      };
-    } catch (error) {
-      console.error('Error calling OpenAI API:', error);
-      throw error;
-    }
-  }
-}
+// Create a global OpenAI client instance
+const openaiClient = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 const DEFAULT_MODEL = process.env.OPENAI_MODEL || 'gpt-4-turbo';
 
@@ -111,7 +75,7 @@ export async function generateCharacterSuggestions(prompt: CharacterPrompt): Pro
       }
     `;
 
-    const response = await this.client.chat.completions.create({
+    const response = await openaiClient.chat.completions.create({
       model: DEFAULT_MODEL,
       messages: [
         { role: 'system', content: 'You are a Dungeons & Dragons character creation assistant. You help players create detailed and interesting characters for 5th Edition D&D.' },
@@ -156,7 +120,7 @@ export async function generateBackstory(character: Partial<Character>): Promise<
       - Interesting hooks that could be used in campaigns
     `;
 
-    const response = await this.client.chat.completions.create({
+    const response = await openaiClient.chat.completions.create({
       model: DEFAULT_MODEL,
       messages: [
         { role: 'system', content: 'You are a creative writer specializing in fantasy character backstories for Dungeons & Dragons.' },
@@ -172,9 +136,24 @@ export async function generateBackstory(character: Partial<Character>): Promise<
 }
 
 /**
+ * Define a type for the raw character data from the API
+ */
+interface RawCharacterData {
+  name: string;
+  race: CharacterRace;
+  class: CharacterClass;
+  level?: number;
+  background: CharacterBackground;
+  alignment: CharacterAlignment;
+  abilityScores: AbilityScores;
+  equipment?: Array<{name?: string; category?: string; description?: string} | string>;
+  [key: string]: any; // Allow for additional properties
+}
+
+/**
  * Process and format the character data from the API response
  */
-function processCharacterData(data: any): Partial<Character> {
+function processCharacterData(data: RawCharacterData): Partial<Character> {
   // Generate a unique ID for the character
   const id = Math.random().toString(36).substring(2, 15);
   
@@ -188,12 +167,18 @@ function processCharacterData(data: any): Partial<Character> {
   const hitPoints = baseHitPoints + constitutionModifier;
   
   // Format equipment array if it's not already in the correct format
-  const equipment = Array.isArray(data.equipment) 
-    ? data.equipment.map((item: any) => ({
-        name: item.name || '',
-        category: item.category || 'Gear',
-        description: item.description || ''
-      })) 
+  const equipment = Array.isArray(data.equipment)
+    ? data.equipment.map((item) => {
+        if (typeof item === 'string') {
+          return { name: item, category: 'Gear', description: '' };
+        } else {
+          return {
+            name: item.name || '',
+            category: item.category || 'Gear',
+            description: item.description || ''
+          };
+        }
+      })
     : [];
   
   return {
