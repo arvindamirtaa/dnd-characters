@@ -15,6 +15,16 @@ import DetailsForm from './steps/DetailsForm';
 import EquipmentSelector from './steps/EquipmentSelector';
 import CharacterReview from './steps/CharacterReview';
 
+// Define a type for the character generation prompt
+type CharacterGenerationPrompt = {
+  name?: string;
+  race?: string;
+  class?: string;
+  level?: number;
+  background?: string;
+  alignment?: string;
+};
+
 // Default ability scores
 const DEFAULT_ABILITY_SCORES: AbilityScores = {
   strength: 10,
@@ -78,19 +88,9 @@ export default function CharacterWizard() {
   const updateCharacter = (updates: Partial<Character>) => {
     setCharacter(prev => ({ ...prev, ...updates }));
   };
-// Define a type for the character generation prompt
-type CharacterGenerationPrompt = {
-  name?: string;
-  race?: string;
-  class?: string;
-  level?: number;
-  background?: string;
-  alignment?: string;
-};
 
-// Function to generate a character using AI
-const generateCharacter = async (prompt: CharacterGenerationPrompt = {}) => {
-  const generateCharacter = async (prompt: any = {}) => {
+  // Function to generate a character using AI
+  const generateCharacter = async (prompt: CharacterGenerationPrompt = {}) => {
     setIsGenerating(true);
     setError(null);
     
@@ -210,7 +210,6 @@ const generateCharacter = async (prompt: CharacterGenerationPrompt = {}) => {
           <AbilityScoresSelector
             abilityScores={character.abilityScores || DEFAULT_ABILITY_SCORES}
             onUpdateScores={(abilityScores) => updateCharacter({ abilityScores })}
-            race={character.race as CharacterRace}
             characterClass={character.class as CharacterClass}
           />
         );
@@ -247,7 +246,7 @@ const generateCharacter = async (prompt: CharacterGenerationPrompt = {}) => {
       case WizardStep.Review:
         return (
           <CharacterReview
-            character={character as Character}
+            character={character}
             onUpdateCharacter={updateCharacter}
           />
         );
@@ -261,7 +260,7 @@ const generateCharacter = async (prompt: CharacterGenerationPrompt = {}) => {
             </p>
             
             <CharacterSheetPDF 
-              character={character as Character} 
+              character={character} 
               className="mb-8"
             />
             
@@ -439,4 +438,4 @@ const generateCharacter = async (prompt: CharacterGenerationPrompt = {}) => {
       </div>
     </div>
   );
-} 
+}

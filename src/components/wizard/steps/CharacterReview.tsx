@@ -16,7 +16,7 @@ const formatModifier = (modifier: number): string => {
 };
 
 type CharacterReviewProps = {
-  character: Character;
+  character: Partial<Character>;
   onUpdateCharacter?: (updates: Partial<Character>) => void;
 };
 

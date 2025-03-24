@@ -1,17 +1,44 @@
 'use client';
 
 import jsPDF from 'jspdf';
-import { Character } from '@/types/character';
+import { Character, AbilityScores } from '@/types/character';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePdf, faDownload } from '@fortawesome/free-solid-svg-icons';
 
-type CharacterSheetPDFProps = {
-  character: Character;
-  className?: string;
+// Default ability scores
+const DEFAULT_ABILITY_SCORES: AbilityScores = {
+  strength: 10,
+  dexterity: 10,
+  constitution: 10,
+  intelligence: 10,
+  wisdom: 10,
+  charisma: 10
 };
 
+type CharacterSheetPDFProps = {
+  character: Partial<Character>;
+  className?: string;
+};
 const CharacterSheetPDF = ({ character, className = '' }: CharacterSheetPDFProps) => {
   const generatePDF = () => {
+    // Ensure all required properties have default values
+    const safeCharacter = {
+      name: character.name || 'Unnamed Character',
+      race: character.race || 'Unknown Race',
+      class: character.class || 'Unknown Class',
+      level: character.level || 1,
+      background: character.background || 'Unknown Background',
+      alignment: character.alignment || 'True Neutral',
+      experiencePoints: character.experiencePoints || 0,
+      abilityScores: character.abilityScores || DEFAULT_ABILITY_SCORES,
+      hitPoints: character.hitPoints || 10,
+      armorClass: character.armorClass || 10,
+      speed: character.speed || 30,
+      features: character.features || [],
+      backstory: character.backstory || 'No backstory provided.',
+      ...character
+    };
+    
     // Create a new PDF document
     const doc = new jsPDF({
       orientation: 'portrait',
@@ -30,7 +57,7 @@ const CharacterSheetPDF = ({ character, className = '' }: CharacterSheetPDFProps
     // Add character name
     doc.setFontSize(20);
     doc.setTextColor('#161618'); // dnd-dark
-    doc.text(`${character.name}`, 105, 25, { align: 'center' });
+    doc.text(`${safeCharacter.name}`, 105, 25, { align: 'center' });
     
     // Add basic info
     doc.setFontSize(12);
@@ -53,39 +80,41 @@ const CharacterSheetPDF = ({ character, className = '' }: CharacterSheetPDFProps
     // Column 1: Race, Alignment
     doc.text('Race:', 20, 40);
     doc.setFontSize(12);
-    doc.text(character.race, 50, 40);
+    doc.text(safeCharacter.race, 50, 40);
     
     doc.setFontSize(10);
     doc.text('Alignment:', 20, 50);
     doc.setFontSize(12);
-    doc.text(character.alignment, 50, 50);
+    doc.text(safeCharacter.alignment, 50, 50);
     
     // Column 2: Class, Level, Background
     doc.setFontSize(10);
     doc.text('Class:', 100, 40);
     doc.setFontSize(12);
-    doc.text(character.class, 130, 40);
+    doc.text(safeCharacter.class, 130, 40);
     
     doc.setFontSize(10);
     doc.text('Level:', 100, 50);
     doc.setFontSize(12);
-    doc.text(character.level.toString(), 130, 50);
+    doc.text(safeCharacter.level.toString(), 130, 50);
     
     doc.setFontSize(10);
     doc.text('Background:', 100, 60);
     doc.setFontSize(12);
-    doc.text(character.background, 130, 60);
+    doc.text(safeCharacter.background, 130, 60);
     
     // Experience & Hit Points
     doc.setFontSize(10);
     doc.text('Experience:', 20, 70);
     doc.setFontSize(12);
-    doc.text((character.experiencePoints || 0).toString(), 50, 70);
+    doc.text(safeCharacter.experiencePoints.toString(), 50, 70);
     
     doc.setFontSize(10);
     doc.text('Hit Points:', 100, 70);
     doc.setFontSize(12);
-    doc.text(`${character.hitPoints || 0}`, 130, 70);
+    doc.text(typeof safeCharacter.hitPoints === 'object'
+      ? `${safeCharacter.hitPoints.current}/${safeCharacter.hitPoints.maximum}`
+      : safeCharacter.hitPoints.toString(), 130, 70);
     
     // Ability Scores section
     doc.setFillColor('#f2e8d4'); // dnd-light
@@ -102,12 +131,12 @@ const CharacterSheetPDF = ({ character, className = '' }: CharacterSheetPDFProps
     
     // Draw ability scores
     const abilities = [
-      { name: 'Strength', value: character.abilityScores.strength },
-      { name: 'Dexterity', value: character.abilityScores.dexterity },
-      { name: 'Constitution', value: character.abilityScores.constitution },
-      { name: 'Intelligence', value: character.abilityScores.intelligence },
-      { name: 'Wisdom', value: character.abilityScores.wisdom },
-      { name: 'Charisma', value: character.abilityScores.charisma },
+      { name: 'Strength', value: safeCharacter.abilityScores.strength },
+      { name: 'Dexterity', value: safeCharacter.abilityScores.dexterity },
+      { name: 'Constitution', value: safeCharacter.abilityScores.constitution },
+      { name: 'Intelligence', value: safeCharacter.abilityScores.intelligence },
+      { name: 'Wisdom', value: safeCharacter.abilityScores.wisdom },
+      { name: 'Charisma', value: safeCharacter.abilityScores.charisma },
     ];
     
     let yPos = 110;
@@ -143,18 +172,18 @@ const CharacterSheetPDF = ({ character, className = '' }: CharacterSheetPDFProps
     doc.setTextColor('#161618'); // dnd-dark
     doc.text('Armor Class:', 75, 110);
     doc.setFontSize(12);
-    doc.text((character.armorClass || 10).toString(), 100, 110);
+    doc.text(safeCharacter.armorClass.toString(), 100, 110);
     
     doc.setFontSize(10);
     doc.text('Initiative:', 120, 110);
     doc.setFontSize(12);
-    const initiative = getModifier(character.abilityScores.dexterity);
+    const initiative = getModifier(safeCharacter.abilityScores.dexterity);
     doc.text(initiative >= 0 ? `+${initiative}` : initiative.toString(), 145, 110);
     
     doc.setFontSize(10);
     doc.text('Speed:', 75, 125);
     doc.setFontSize(12);
-    doc.text(`${character.speed} ft.`, 100, 125);
+    doc.text(`${safeCharacter.speed} ft.`, 100, 125);
     
     // Character features section
     doc.setFillColor('#f2e8d4'); // dnd-light
@@ -171,8 +200,8 @@ const CharacterSheetPDF = ({ character, className = '' }: CharacterSheetPDFProps
     doc.setTextColor('#161618'); // dnd-dark
     
     yPos = 160;
-    if (character.features && character.features.length > 0) {
-      character.features.slice(0, 8).forEach(feature => {
+    if (safeCharacter.features && safeCharacter.features.length > 0) {
+      safeCharacter.features.slice(0, 8).forEach(feature => {
         const featureName = typeof feature === 'string' ? feature : feature.name;
         doc.text(`• ${featureName}`, 75, yPos);
         yPos += 7;
@@ -193,9 +222,9 @@ const CharacterSheetPDF = ({ character, className = '' }: CharacterSheetPDFProps
     doc.setTextColor('#161618'); // dnd-dark
     
     // Split backstory into shorter lines if it exists
-    if (character.backstory) {
+    if (safeCharacter.backstory) {
       const maxWidth = 170;
-      const splitBackstory = doc.splitTextToSize(character.backstory, maxWidth);
+      const splitBackstory = doc.splitTextToSize(safeCharacter.backstory, maxWidth);
       
       // Only show first 12 lines to fit on page
       const maxLines = 12;
@@ -209,7 +238,7 @@ const CharacterSheetPDF = ({ character, className = '' }: CharacterSheetPDFProps
     }
     
     // Save the PDF
-    doc.save(`${character.name.replace(/\s+/g, '_')}_character_sheet.pdf`);
+    doc.save(`${safeCharacter.name.replace(/\s+/g, '_')}_character_sheet.pdf`);
   };
 
   return (

@@ -30,7 +30,7 @@ const formatModifier = (modifier: number): string => {
 type AbilityScoresSelectorProps = {
   abilityScores: AbilityScores;
   onUpdateScores: (scores: AbilityScores) => void;
-  race: CharacterRace;
+  race?: CharacterRace;
   characterClass: CharacterClass;
 };
 

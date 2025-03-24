@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { Character, CharacterAlignment } from '@/types/character';
 
 type DetailsFormProps = {
-  character: Character;
+  character: Partial<Character>;
   onUpdateCharacter: (updates: Partial<Character>) => void;
   onGenerateBackstory: () => Promise<void>;
   isGenerating: boolean;
