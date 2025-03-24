@@ -94,43 +94,42 @@ const DiceRoller = ({ onRollComplete, className = '', defaultDieType = 20 }: Dic
   };
 
   return (
-    <div className={`rounded-lg border-2 border-dnd-secondary p-4 bg-dnd-dark/80 ${className}`}>
-      <h3 className="heading-fancy text-xl mb-4 text-center">Dice Roller</h3>
+    <div className={`rounded-lg border border-dnd-secondary p-2 bg-dnd-dark/80 ${className}`}>
+      <h3 className="heading-fancy text-sm mb-2 text-center">Dice Roller</h3>
       
-      <div className="flex justify-center mb-4 space-x-2">
+      <div className="flex flex-wrap justify-center mb-2 gap-1">
         {[4, 6, 8, 10, 12, 20, 100].map((die) => (
           <button
             key={die}
-            className={`p-2 rounded-md transition-all ${
-              dieType === die 
-                ? 'bg-dnd-primary text-white border-2 border-dnd-secondary' 
+            className={`p-1 rounded-md transition-all ${
+              dieType === die
+                ? 'bg-dnd-primary text-white border border-dnd-secondary'
                 : 'bg-dnd-dark text-dnd-light hover:bg-dnd-primary/70'
             }`}
             onClick={() => setDieType(die as DieType)}
             aria-label={`Select d${die}`}
           >
             <div className="flex flex-col items-center">
-              {getDieIcon(die as DieType)}
-              <span className="text-xs mt-1">{getDieLabel(die as DieType)}</span>
+              <span className="text-xs">{getDieLabel(die as DieType)}</span>
             </div>
           </button>
         ))}
       </div>
       
-      <div className="flex justify-center mb-4">
+      <div className="flex justify-center mb-2">
         <motion.button
           ref={buttonRef}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={rollDie}
           disabled={isRolling}
-          className="bg-dnd-primary text-white py-3 px-6 rounded-lg font-medieval tracking-wide border-2 border-dnd-secondary text-xl relative overflow-hidden"
+          className="bg-dnd-primary text-white py-1 px-3 rounded-md font-medieval tracking-wide border border-dnd-secondary text-sm relative overflow-hidden"
         >
           <span className="relative z-10">Roll d{dieType}</span>
         </motion.button>
       </div>
       
-      <div className="text-center mb-4 h-16 flex items-center justify-center">
+      <div className="text-center mb-2 h-10 flex items-center justify-center">
         <AnimatePresence mode="wait">
           {result !== null && (
             <motion.div
@@ -138,7 +137,7 @@ const DiceRoller = ({ onRollComplete, className = '', defaultDieType = 20 }: Dic
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.5, opacity: 0 }}
-              className={`text-5xl font-medieval ${
+              className={`text-3xl font-medieval ${
                 result === dieType ? 'text-dnd-secondary' : 'text-dnd-light'
               }`}
             >
@@ -151,20 +150,20 @@ const DiceRoller = ({ onRollComplete, className = '', defaultDieType = 20 }: Dic
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
               className="text-dnd-secondary"
             >
-              <FontAwesomeIcon icon={faDiceD20} size="2x" />
+              <FontAwesomeIcon icon={faDiceD20} />
             </motion.div>
           )}
         </AnimatePresence>
       </div>
       
       {previousResults.length > 0 && (
-        <div className="mt-4">
-          <h4 className="text-sm text-dnd-secondary mb-2 font-medieval">Previous Rolls:</h4>
-          <div className="flex flex-wrap gap-2 justify-center">
+        <div className="mt-1">
+          <h4 className="text-xs text-dnd-secondary mb-1 font-medieval">Previous:</h4>
+          <div className="flex flex-wrap gap-1 justify-center">
             {previousResults.map((roll, index) => (
-              <div 
-                key={index} 
-                className={`w-8 h-8 flex items-center justify-center rounded-full border text-sm
+              <div
+                key={index}
+                className={`w-5 h-5 flex items-center justify-center rounded-full border text-xs
                   ${roll === dieType ? 'border-dnd-secondary text-dnd-secondary' : 'border-dnd-light/50 text-dnd-light/80'}`}
               >
                 {roll}

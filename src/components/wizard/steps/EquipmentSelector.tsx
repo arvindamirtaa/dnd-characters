@@ -7,8 +7,9 @@ import { motion } from 'framer-motion';
 import { Character } from '@/types/character';
 
 type EquipmentSelectorProps = {
-  character: Character;
-  onUpdateCharacter: (updates: Partial<Character>) => void;
+  equipment: string[];
+  characterClass: string;
+  onUpdateEquipment: (equipment: string[]) => void;
 };
 
 // Equipment categories with example items
@@ -36,37 +37,33 @@ const EQUIPMENT_CATEGORIES = {
 };
 
 export default function EquipmentSelector({
-  character,
-  onUpdateCharacter
+  equipment,
+  characterClass,
+  onUpdateEquipment
 }: EquipmentSelectorProps) {
   const [newItemName, setNewItemName] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<keyof typeof EQUIPMENT_CATEGORIES>('weapons');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isHovered, setIsHovered] = useState<number | null>(null);
 
-  // Initialize equipment if it doesn't exist
-  if (!character.equipment) {
-    onUpdateCharacter({ equipment: [] });
-  }
-
   const addItem = (item: string) => {
     if (!item.trim()) return;
     
-    const updatedEquipment = [...(character.equipment || []), item];
-    onUpdateCharacter({ equipment: updatedEquipment });
+    const updatedEquipment = [...equipment, item];
+    onUpdateEquipment(updatedEquipment);
     setNewItemName('');
     setShowSuggestions(false);
   };
 
   const removeItem = (index: number) => {
-    const updatedEquipment = [...(character.equipment || [])];
+    const updatedEquipment = [...equipment];
     updatedEquipment.splice(index, 1);
-    onUpdateCharacter({ equipment: updatedEquipment });
+    onUpdateEquipment(updatedEquipment);
   };
 
   const addRandomEquipment = () => {
     // Generate some random equipment based on character class
-    let newEquipment: string[] = [...(character.equipment || [])];
+    let newEquipment: string[] = [...equipment];
     
     // Add a random weapon
     const weaponIndex = Math.floor(Math.random() * EQUIPMENT_CATEGORIES.weapons.length);
@@ -92,7 +89,7 @@ export default function EquipmentSelector({
     // Remove duplicates
     newEquipment = [...new Set(newEquipment)];
     
-    onUpdateCharacter({ equipment: newEquipment });
+    onUpdateEquipment(newEquipment);
   };
 
   const suggestions = EQUIPMENT_CATEGORIES[selectedCategory].filter(item => 
@@ -182,9 +179,9 @@ export default function EquipmentSelector({
         <div className="bg-dnd-dark/60 rounded-lg p-4 border-2 border-dnd-secondary/50">
           <h3 className="heading-fancy text-xl mb-4">Current Equipment</h3>
           
-          {character.equipment && character.equipment.length > 0 ? (
+          {equipment && equipment.length > 0 ? (
             <ul className="space-y-2">
-              {character.equipment.map((item, index) => (
+              {equipment.map((item: string, index: number) => (
                 <motion.li
                   key={index}
                   className={`flex justify-between items-center py-2 px-3 rounded ${isHovered === index ? 'bg-dnd-dark/80' : 'bg-dnd-dark/40'}`}

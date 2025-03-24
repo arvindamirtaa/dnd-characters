@@ -27,49 +27,55 @@
 @layer components {
   /* Buttons */
   .btn-primary {
-    @apply bg-dnd-primary text-white py-2 px-6 rounded-md hover:bg-opacity-90 transition-all
-           shadow-md font-medieval tracking-wide border-2 border-dnd-secondary;
+    @apply bg-dnd-primary text-white py-1.5 sm:py-2 px-3 sm:px-6 rounded-md hover:bg-opacity-90 transition-all
+           shadow-md font-medieval tracking-wide border border-dnd-secondary sm:border-2 text-sm sm:text-base;
   }
   
   .btn-secondary {
-    @apply bg-dnd-secondary text-dnd-dark py-2 px-6 rounded-md hover:bg-opacity-90 transition-all
-           shadow-md font-medieval tracking-wide border-2 border-dnd-primary;
+    @apply bg-dnd-secondary text-dnd-dark py-1.5 sm:py-2 px-3 sm:px-6 rounded-md hover:bg-opacity-90 transition-all
+           shadow-md font-medieval tracking-wide border border-dnd-primary sm:border-2 text-sm sm:text-base;
   }
   
   .btn-icon {
-    @apply inline-flex items-center justify-center w-10 h-10 rounded-md
+    @apply inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-md
            bg-dnd-dark/30 text-dnd-light border border-dnd-secondary
            hover:bg-dnd-secondary/20 hover:text-dnd-secondary transition-all cursor-pointer;
   }
   
   /* Cards and containers */
   .card {
-    @apply bg-dnd-dark/80 border-2 border-dnd-secondary rounded-lg p-6 shadow-lg;
+    @apply bg-dnd-dark/80 border-2 border-dnd-secondary rounded-lg p-4 md:p-6 shadow-lg;
   }
   
   .wizard-container {
-    @apply max-w-4xl mx-auto p-6 bg-dnd-dark/90 rounded-xl shadow-lg border-2 border-dnd-secondary;
+    @apply w-[98%] lg:w-[96%] xl:w-[94%] mx-auto p-2 bg-dnd-dark/90 rounded-xl shadow-lg border-2 border-dnd-secondary;
+    height: calc(100vh - 8rem);
+    overflow: hidden;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
   }
   
   /* Form elements */
   .input-field {
-    @apply bg-dnd-dark/60 border-2 border-dnd-secondary rounded-md px-4 py-2 text-dnd-light
-           focus:ring-2 focus:ring-dnd-primary focus:border-dnd-primary focus:outline-none
+    @apply bg-dnd-dark/60 border border-dnd-secondary sm:border-2 rounded-md px-2 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base text-dnd-light
+           focus:ring-1 sm:focus:ring-2 focus:ring-dnd-primary focus:border-dnd-primary focus:outline-none
            placeholder:text-dnd-light/40;
   }
   
   .select-field {
-    @apply bg-dnd-dark/60 border-2 border-dnd-secondary rounded-md px-4 py-2 text-dnd-light
-           focus:ring-2 focus:ring-dnd-primary focus:border-dnd-primary focus:outline-none;
+    @apply bg-dnd-dark/60 border border-dnd-secondary sm:border-2 rounded-md px-2 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base text-dnd-light
+           focus:ring-1 sm:focus:ring-2 focus:ring-dnd-primary focus:border-dnd-primary focus:outline-none;
   }
   
   .form-group {
-    @apply mb-4;
+    @apply mb-3 sm:mb-4;
   }
   
   /* Typography */
   .heading-fancy {
-    @apply font-medieval text-dnd-secondary tracking-wider;
+    @apply font-medieval text-dnd-secondary tracking-wider text-lg sm:text-xl md:text-2xl;
     position: relative;
   }
   
@@ -77,10 +83,17 @@
     content: '';
     display: block;
     width: 50%;
-    height: 2px;
+    height: 1px;
     background: linear-gradient(90deg, transparent, theme('colors.dnd-secondary'), transparent);
-    margin: 0.5rem auto 0;
+    margin: 0.25rem auto 0;
     opacity: 0.7;
+  }
+  
+  @screen sm {
+    .heading-fancy::after {
+      height: 2px;
+      margin: 0.5rem auto 0;
+    }
   }
   
   /* Backgrounds */

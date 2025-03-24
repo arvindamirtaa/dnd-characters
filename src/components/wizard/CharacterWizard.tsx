@@ -225,9 +225,13 @@ export default function CharacterWizard() {
       case WizardStep.Equipment:
         return (
           <EquipmentSelector
-            equipment={character.equipment || []}
+            equipment={(character.equipment || []).map(item => typeof item === 'string' ? item : item.name)}
             characterClass={character.class as CharacterClass}
-            onUpdateEquipment={(equipment) => updateCharacter({ equipment })}
+            onUpdateEquipment={(equipmentNames) => {
+              // Convert string array to Equipment array
+              const equipment = equipmentNames.map(name => ({ name }));
+              updateCharacter({ equipment });
+            }}
           />
         );
       case WizardStep.Review:
@@ -273,17 +277,17 @@ export default function CharacterWizard() {
   const progressPercentage = ((currentStep) / (WizardStep.Complete)) * 100;
 
   return (
-    <div className="wizard-container">
-      {/* Progress bar */}
+    <div className="wizard-container flex flex-col">
+      {/* Top section with progress bar */}
       {currentStep < WizardStep.Complete && (
-        <div className="mb-8">
-          <div className="h-2 bg-dnd-dark rounded-full mb-2">
-            <div 
+        <div className="flex-shrink-0 mb-2">
+          <div className="h-2 bg-dnd-dark rounded-full mb-1">
+            <div
               className="h-full bg-dnd-secondary rounded-full transition-all duration-500"
               style={{ width: `${progressPercentage}%` }}
             ></div>
           </div>
-          <div className="flex justify-between text-xs text-dnd-light/70 font-medieval">
+          <div className="hidden md:flex justify-between text-xs text-dnd-light/70 font-medieval">
             <span>Start</span>
             <span>Race</span>
             <span>Class</span>
@@ -293,96 +297,136 @@ export default function CharacterWizard() {
             <span>Equipment</span>
             <span>Review</span>
           </div>
+          <div className="flex md:hidden justify-between text-xs text-dnd-light/70 font-medieval">
+            <span>Start</span>
+            <span className={currentStep >= WizardStep.Class ? "text-dnd-secondary" : ""}>Mid</span>
+            <span className={currentStep >= WizardStep.Review ? "text-dnd-secondary" : ""}>End</span>
+          </div>
         </div>
       )}
       
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentStep}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.3 }}
-        >
-          {getStepContent()}
-        </motion.div>
-      </AnimatePresence>
-      
-      {/* Error message */}
-      {error && (
-        <div className="bg-dnd-danger/20 border-2 border-dnd-danger p-4 rounded-md mt-6">
-          <p className="text-dnd-light">{error}</p>
-        </div>
-      )}
-      
-      {/* Dice roller */}
-      {currentStep !== WizardStep.Complete && (
-        <div className="mt-8">
-          <DiceRoller className="max-w-md mx-auto" />
-        </div>
-      )}
-      
-      {/* Navigation buttons */}
-      {currentStep < WizardStep.Complete && (
-        <div className="flex justify-between mt-8">
-          <button
-            onClick={goToPreviousStep}
-            disabled={currentStep === WizardStep.Race}
-            className={`btn-secondary flex items-center gap-2 ${
-              currentStep === WizardStep.Race ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            <FontAwesomeIcon icon={faArrowLeft} />
-            Previous
-          </button>
-          
-          {currentStep === WizardStep.Review && (
-            <button
-              onClick={() => setCurrentStep(WizardStep.Complete)}
-              className="btn-primary flex items-center gap-2"
+      {/* Main content area with side panel for dice roller */}
+      <div className="flex-grow flex gap-2 overflow-hidden">
+        {/* Main content */}
+        <div className="flex-grow overflow-auto">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="h-full"
             >
-              Complete
-              <FontAwesomeIcon icon={faSave} />
-            </button>
-          )}
-          
-          {currentStep !== WizardStep.Review && (
-            <button
-              onClick={goToNextStep}
-              className="btn-primary flex items-center gap-2"
-            >
-              Next
-              <FontAwesomeIcon icon={faArrowRight} />
-            </button>
-          )}
+              {getStepContent()}
+            </motion.div>
+          </AnimatePresence>
         </div>
-      )}
-      
-      {/* Quick generate button */}
-      {currentStep === WizardStep.Race && (
-        <div className="text-center mt-8 border-t-2 border-dnd-secondary/30 pt-6">
-          <p className="mb-4 text-dnd-light/70">
-            Want a character right away? Let our AI generate one for you!
-          </p>
-          <button
-            onClick={() => generateCharacter()}
-            disabled={isGenerating}
-            className="btn-secondary flex items-center gap-2 mx-auto"
-          >
-            {isGenerating ? (
-              <>
-                <FontAwesomeIcon icon={faSpinner} spin />
-                Generating...
-              </>
-            ) : (
-              <>
-                <FontAwesomeIcon icon={faRandom} />
-                Generate Complete Character
-              </>
+        
+        {/* Side panel with dice roller */}
+        {currentStep !== WizardStep.Complete && (
+          <div className="hidden lg:block w-64 flex-shrink-0 overflow-auto">
+            <DiceRoller className="sticky top-0" />
+            
+            {/* Quick generate button */}
+            {currentStep === WizardStep.Race && (
+              <div className="mt-2 border-t border-dnd-secondary/30 pt-2">
+                <p className="mb-2 text-xs text-dnd-light/70">
+                  Want a character right away?
+                </p>
+                <button
+                  onClick={() => generateCharacter()}
+                  disabled={isGenerating}
+                  className="btn-secondary flex items-center gap-1 w-full text-xs px-2 py-1"
+                >
+                  {isGenerating ? (
+                    <>
+                      <FontAwesomeIcon icon={faSpinner} spin />
+                      <span>Generating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FontAwesomeIcon icon={faRandom} />
+                      <span>Generate Character</span>
+                    </>
+                  )}
+                </button>
+              </div>
             )}
-          </button>
+          </div>
+        )}
+      </div>
+      
+      {/* Bottom section with navigation and error messages */}
+      <div className="flex-shrink-0 mt-2">
+        {/* Error message */}
+        {error && (
+          <div className="bg-dnd-danger/20 border border-dnd-danger p-2 rounded-md mb-2 text-xs">
+            <p className="text-dnd-light">{error}</p>
+          </div>
+        )}
+        
+        {/* Navigation and quick generate for mobile */}
+        <div className="flex items-center justify-between">
+          {/* Navigation buttons */}
+          {currentStep < WizardStep.Complete && (
+            <div className="flex gap-2">
+              <button
+                onClick={goToPreviousStep}
+                disabled={currentStep === WizardStep.Race}
+                className={`btn-secondary flex items-center gap-1 px-2 py-1 text-xs ${
+                  currentStep === WizardStep.Race ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                <FontAwesomeIcon icon={faArrowLeft} />
+                <span className="hidden xs:inline">Previous</span>
+              </button>
+              
+              {currentStep === WizardStep.Review ? (
+                <button
+                  onClick={() => setCurrentStep(WizardStep.Complete)}
+                  className="btn-primary flex items-center gap-1 px-2 py-1 text-xs"
+                >
+                  <span>Complete</span>
+                  <FontAwesomeIcon icon={faSave} />
+                </button>
+              ) : (
+                <button
+                  onClick={goToNextStep}
+                  className="btn-primary flex items-center gap-1 px-2 py-1 text-xs"
+                >
+                  <span className="hidden xs:inline">Next</span>
+                  <FontAwesomeIcon icon={faArrowRight} />
+                </button>
+              )}
+            </div>
+          )}
+          
+          {/* Quick generate button for mobile */}
+          {currentStep === WizardStep.Race && (
+            <div className="lg:hidden">
+              <button
+                onClick={() => generateCharacter()}
+                disabled={isGenerating}
+                className="btn-secondary flex items-center gap-1 text-xs px-2 py-1"
+              >
+                {isGenerating ? (
+                  <>
+                    <FontAwesomeIcon icon={faSpinner} spin />
+                    <span className="hidden xs:inline">Generating...</span>
+                  </>
+                ) : (
+                  <>
+                    <FontAwesomeIcon icon={faRandom} />
+                    <span className="hidden xs:inline">Generate Character</span>
+                    <span className="xs:hidden">Generate</span>
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 } 

@@ -129,7 +129,11 @@ export default function CharacterReview({ character }: CharacterReviewProps) {
               </div>
               <div className="flex justify-between">
                 <span className="text-dnd-light/70">Hit Points:</span>
-                <span className="font-medieval text-dnd-light">{character.hitPoints || 0}</span>
+                <span className="font-medieval text-dnd-light">
+                  {character.hitPoints && typeof character.hitPoints === 'object'
+                    ? `${character.hitPoints.current}/${character.hitPoints.maximum}`
+                    : character.hitPoints || 0}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-dnd-light/70">Hit Dice:</span>

@@ -18,13 +18,13 @@ export default function WizardPage() {
 
   if (loading) {
     return (
-      <div className="wizard-container flex items-center justify-center min-h-[60vh]">
+      <div className="wizard-container flex items-center justify-center h-[calc(100vh-10rem)]">
         <div className="text-center">
-          <h2 className="heading-fancy text-2xl mb-4">Preparing your adventure...</h2>
-          <div className="animate-pulse flex space-x-4 justify-center">
-            <div className="h-12 w-12 bg-dnd-secondary/50 rounded-full"></div>
-            <div className="h-12 w-12 bg-dnd-primary/50 rounded-full"></div>
-            <div className="h-12 w-12 bg-dnd-secondary/50 rounded-full"></div>
+          <h2 className="heading-fancy text-xl sm:text-2xl mb-3 sm:mb-4">Preparing your adventure...</h2>
+          <div className="animate-pulse flex space-x-3 sm:space-x-4 justify-center">
+            <div className="h-8 w-8 sm:h-12 sm:w-12 bg-dnd-secondary/50 rounded-full"></div>
+            <div className="h-8 w-8 sm:h-12 sm:w-12 bg-dnd-primary/50 rounded-full"></div>
+            <div className="h-8 w-8 sm:h-12 sm:w-12 bg-dnd-secondary/50 rounded-full"></div>
           </div>
         </div>
       </div>
@@ -34,16 +34,16 @@ export default function WizardPage() {
   if (apiKeySet === false) {
     return (
       <div className="wizard-container">
-        <div className="bg-dnd-primary/20 border-2 border-dnd-primary p-6 rounded-lg text-center">
-          <h2 className="heading-fancy text-2xl mb-4">API Key Required</h2>
-          <p className="mb-4">
+        <div className="bg-dnd-primary/20 border-2 border-dnd-primary p-3 sm:p-6 rounded-lg text-center">
+          <h2 className="heading-fancy text-xl sm:text-2xl mb-3 sm:mb-4">API Key Required</h2>
+          <p className="mb-3 sm:mb-4 text-sm sm:text-base">
             To use the D&D Character Wizard, you need to set up your OpenAI API key.
             Please add your API key to the .env.local file:
           </p>
-          <div className="bg-dnd-dark p-4 rounded-md text-left font-mono text-sm mb-6">
+          <div className="bg-dnd-dark p-2 sm:p-4 rounded-md text-left font-mono text-xs sm:text-sm mb-4 sm:mb-6">
             <code>OPENAI_API_KEY=your_api_key_here</code>
           </div>
-          <p className="text-sm">
+          <p className="text-xs sm:text-sm">
             Don't have an API key? You can get one from{' '}
             <a
               href="https://platform.openai.com/api-keys"
@@ -61,7 +61,7 @@ export default function WizardPage() {
   }
 
   return (
-    <div className="min-h-[80vh]">
+    <div className="h-full w-full">
       <CharacterWizard />
     </div>
   );
